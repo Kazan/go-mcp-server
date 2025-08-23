@@ -1,11 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
-	"github.com/kazan/mcp-go-server/app/calculator"
-	"github.com/kazan/mcp-go-server/app/logger"
+	"github.com/kazan/go-mcp-server/app/calculator"
+	"github.com/kazan/go-mcp-server/app/logger"
 
 	"github.com/mark3labs/mcp-go/server"
 )
@@ -26,14 +25,15 @@ func main() {
 	httpServer := server.NewStreamableHTTPServer(s)
 
 	// Lets do some logging
-	handler := logger.LoggingMiddlewareFunc(logger.NewLogger(), httpServer)
+	log := logger.NewLogger()
+	handler := logger.LoggingMiddlewareFunc(log, httpServer)
 
 	// Standard http server loop
 	if err := http.ListenAndServe(":8080", handler); err != nil {
 		if err != http.ErrServerClosed {
-			fmt.Printf("Failed to start server: %v\n", err)
+			log.Errorf("Failed to start server: %v\n", err)
 			return
 		}
-		fmt.Println("Server closed")
+		log.Infof("Server closed")
 	}
 }

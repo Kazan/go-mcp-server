@@ -1,4 +1,4 @@
-module github.com/kazan/mcp-go-server
+module github.com/kazan/go-mcp-server
 
 go 1.24.6
 
