@@ -10,7 +10,7 @@ import (
 
 func Attach(s *server.MCPServer) {
 
-	// Add a calculator tool
+	// Add a calculator tool schema
 	calculatorTool := mcp.NewTool("calculate",
 		mcp.WithDescription("Perform basic arithmetic operations"),
 		mcp.WithString("operation",
