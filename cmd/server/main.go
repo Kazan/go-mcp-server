@@ -26,7 +26,7 @@ func main() {
 	httpServer := server.NewStreamableHTTPServer(s)
 
 	// Lets do some logging
-	handler := logger.LoggingMiddlewareFunc(&logger.StdLogger{}, httpServer)
+	handler := logger.LoggingMiddlewareFunc(logger.NewLogger(), httpServer)
 
 	// Standard http server loop
 	if err := http.ListenAndServe(":8080", handler); err != nil {

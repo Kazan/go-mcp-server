@@ -15,7 +15,7 @@ func Attach(s *server.MCPServer) {
 		mcp.WithDescription("Perform basic arithmetic operations"),
 		mcp.WithString("operation",
 			mcp.Required(),
-			mcp.Description("The operation to perform (add, subtract, multiply, divide)"),
+			mcp.Description("The operation to perform (add, subtract, etc."),
 			mcp.Enum("add", "subtract", "multiply", "divide"),
 		),
 		mcp.WithNumber("x",
