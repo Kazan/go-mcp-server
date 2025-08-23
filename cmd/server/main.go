@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/kazan/mcp-go-server/internal/logger"
+
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
-	"github.com/mark3labs/mcp-go/util"
 )
 
 func main() {
@@ -75,12 +76,11 @@ func main() {
 	})
 
 	// Start the server
-	httpServer := server.NewStreamableHTTPServer(
-		s,
-		server.WithLogger(util.DefaultLogger()),
-	)
+	httpServer := server.NewStreamableHTTPServer(s)
 
-	if err := http.ListenAndServe(":8080", httpServer); err != nil {
+	handler := logger.LoggingMiddlewareFunc(&logger.StdLogger{}, httpServer)
+
+	if err := http.ListenAndServe(":8080", handler); err != nil {
 		if err != http.ErrServerClosed {
 			fmt.Printf("Failed to start server: %v\n", err)
 			return
