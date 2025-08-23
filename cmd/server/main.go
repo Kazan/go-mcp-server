@@ -14,7 +14,7 @@ func main() {
 	s := server.NewMCPServer(
 		"Calculator Demo",
 		"1.0.0",
-		server.WithToolCapabilities(true),
+		server.WithToolCapabilities(false),
 		server.WithRecovery(),
 		server.WithLogging(),
 	)

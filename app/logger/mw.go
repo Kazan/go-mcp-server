@@ -2,6 +2,7 @@ package logger
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -19,7 +20,8 @@ func LoggingMiddlewareFunc(l *StdLogger, next *server.StreamableHTTPServer) http
 		r.Body = io.NopCloser(bytes.NewBuffer(rbody))
 
 		callID := fmt.Sprintf("%08d", calls)
-		l.Infof("Request [%s]: %s %s, body:\n%s", callID, r.Method, r.URL.Path, string(rbody))
+		headers, _ := json.Marshal(r.Header)
+		l.Infof("Request [%s]: %s %s\nheaders:\n%s\nbody:\n%s", callID, r.Method, r.URL.Path, string(headers), string(rbody))
 
 		rw := NewDeferredWriter(w)
 		// Call the next handler
