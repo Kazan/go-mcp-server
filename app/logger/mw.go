@@ -23,14 +23,14 @@ func LoggingMiddlewareFunc(l *StdLogger, next *server.StreamableHTTPServer) http
 		headers, _ := json.Marshal(r.Header)
 		l.Infof("Request [%s]: %s %s\nheaders:\n%s\nbody:\n%s", callID, r.Method, r.URL.Path, string(headers), string(rbody))
 
-		rw := NewDeferredWriter(w)
+		// capture response body for logging purposes
+		rw := NewResponseCapturer(w)
+
 		// Call the next handler
 		next.ServeHTTP(rw, r)
 
 		// Log the outgoing response
 		buf := rw.Buffer()
 		l.Infof("Response [%s]:\n%s", callID, buf.String())
-
-		rw.Done()
 	})
 }
