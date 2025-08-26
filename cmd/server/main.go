@@ -19,9 +19,10 @@ func main() {
 		server.WithLogging(),
 	)
 
+	// Configure and attach our calculator tool to the mcp server
 	calculator.Attach(s)
 
-	// Start the server
+	// Build the handler from our server
 	httpServer := server.NewStreamableHTTPServer(s)
 
 	// Lets do some logging
