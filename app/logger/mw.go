@@ -20,8 +20,7 @@ func LoggingMiddlewareFunc(l *StdLogger, next *server.StreamableHTTPServer) http
 		r.Body = io.NopCloser(bytes.NewBuffer(rbody))
 
 		callID := fmt.Sprintf("%08d", calls)
-		headers, _ := json.Marshal(r.Header)
-		l.Infof("Request [%s]: %s %s\nheaders:\n%s\nbody:\n%s", callID, r.Method, r.URL.Path, string(headers), string(rbody))
+		l.Infof("Request [%s]: %s %s\nbody:\n%s", callID, r.Method, r.URL.Path, string(rbody))
 
 		// capture response body for logging purposes
 		rw := NewResponseCapturer(w)
@@ -31,6 +30,10 @@ func LoggingMiddlewareFunc(l *StdLogger, next *server.StreamableHTTPServer) http
 
 		// Log the outgoing response
 		buf := rw.Buffer()
-		l.Infof("Response [%s]:\n%s", callID, buf.String())
+		var j map[string]any
+		_ = json.Unmarshal(buf.Bytes(), &j)
+		outBody, _ := json.MarshalIndent(j, "", "  ")
+
+		l.Infof("Response [%s]:\n%s", callID, outBody)
 	})
 }

@@ -10,7 +10,7 @@ import (
 
 func Attach(s *server.MCPServer) {
 
-	// Add a calculator tool schema
+	// Define tool schema
 	calculatorTool := mcp.NewTool("calculate",
 		mcp.WithDescription("Perform basic arithmetic operations"),
 		mcp.WithString("operation",
@@ -28,8 +28,8 @@ func Attach(s *server.MCPServer) {
 		),
 	)
 
-	// Add the calculator handler
-	s.AddTool(calculatorTool, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	// Implement tool handler
+	toolHandler := func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		// Using helper functions for type-safe argument access
 		op, err := request.RequireString("operation")
 		if err != nil {
@@ -62,5 +62,8 @@ func Attach(s *server.MCPServer) {
 		}
 
 		return mcp.NewToolResultText(fmt.Sprintf("%.2f", result)), nil
-	})
+	}
+
+	// Add the calculator schema and handler to the mcp server
+	s.AddTool(calculatorTool, toolHandler)
 }
